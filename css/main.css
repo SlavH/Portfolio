@@ -161,11 +161,11 @@ html, body {
 }
 
 #header-background {
-  background-image: url('../images/header-background.jpg');
+  background-image: url('../images/header-background.webp');
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 .lord-icon:hover {
