@@ -22,6 +22,13 @@ body {
   color: #DCD7C9 !important;
 }
 
+.avatar img {
+  padding: 0.25rem;
+  border: 1px solid #e0e0e0;
+  opacity: .9;
+  border-radius: 50%;
+}
+
 /* Timeline custom component */
 .timeline-card {
   position: relative;
