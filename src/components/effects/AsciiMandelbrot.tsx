@@ -29,8 +29,8 @@ export function AsciiMandelbrot() {
     window.addEventListener('resize', resize)
 
     function mandelbrot(px: number, py: number, maxIter: number): number {
-      let x0 = (px / cols - 0.5) * 3.5 / zoom + offsetX
-      let y0 = (py / rows - 0.5) * 2.5 / zoom + offsetY
+      const x0 = (px / cols - 0.5) * 3.5 / zoom + offsetX
+      const y0 = (py / rows - 0.5) * 2.5 / zoom + offsetY
       let x = 0, y = 0, iter = 0
       while (x * x + y * y <= 4 && iter < maxIter) {
         const xt = x * x - y * y + x0
@@ -42,6 +42,10 @@ export function AsciiMandelbrot() {
     }
 
     function draw() {
+      if (document.hidden) {
+        animId = requestAnimationFrame(draw)
+        return
+      }
       zoom *= 1.001
       offsetX += 0.00005
       offsetY += 0.00002

@@ -11,10 +11,6 @@
   --text-muted: #9ca3af;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -22,7 +18,7 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-#projects, #skills, #experience, #blog, #contact, #landings {
+#projects, #skills, #experience, #blog, #contact, #landings, #about {
   scroll-margin-top: 80px;
 }
 

@@ -89,7 +89,9 @@ export function LandingsCarousel() {
           {Array.from({ length: total }).map((_, i) => (
             <button
               key={i}
-              onClick={() => { setPage(i); setPaused(true) }}
+              onClick={() => setPage(i)}
+              aria-label={`Go to page ${i + 1}`}
+              aria-current={i === page ? 'page' : undefined}
               className={`h-2 rounded-full transition-all cursor-pointer ${
                 i === page ? 'bg-purple-500 w-6' : 'bg-white/10 hover:bg-white/20 w-2'
               }`}
@@ -97,6 +99,7 @@ export function LandingsCarousel() {
           ))}
           <button
             onClick={() => setPaused(!paused)}
+            aria-label={paused ? 'Resume autoplay' : 'Pause autoplay'}
             className="ml-3 w-8 h-8 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-white transition-colors"
           >
             {paused ? <Play size={12} /> : <Pause size={12} />}

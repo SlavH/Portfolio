@@ -30,21 +30,31 @@ const LINES = [
 export function AsciiTerminal() {
   const [visible, setVisible] = useState(0)
   const lineRef = useRef<HTMLDivElement>(null)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
     let idx = 0
+    let cancelled = false
+
+    function clearTimers() {
+      timersRef.current.forEach(clearTimeout)
+      timersRef.current = []
+    }
 
     function tick() {
+      if (cancelled) return
       setVisible(LINES.length)
-      setTimeout(() => {
+      const t = setTimeout(() => {
+        if (cancelled) return
         setVisible(0)
         idx = 0
         runNext()
       }, 3000)
+      timersRef.current.push(t)
     }
 
     function runNext() {
+      if (cancelled) return
       if (idx >= LINES.length) {
         tick()
         return
@@ -52,13 +62,15 @@ export function AsciiTerminal() {
       const line = LINES[idx]
       idx++
       setVisible(idx)
-      timerRef.current = setTimeout(runNext, line.delay)
+      const t = setTimeout(runNext, line.delay)
+      timersRef.current.push(t)
     }
 
     runNext()
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+      cancelled = true
+      clearTimers()
     }
   }, [])
 

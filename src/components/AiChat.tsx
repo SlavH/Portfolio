@@ -8,6 +8,9 @@ interface Message {
   text: string
 }
 
+const MAX_MESSAGES = 50
+const MAX_INPUT_LENGTH = 500
+
 export function AiChat() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -15,6 +18,7 @@ export function AiChat() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -23,23 +27,31 @@ export function AiChat() {
   useEffect(() => {
     if (open && messages.length === 1 && messages[0].text === t('chat.greeting')) return
     setMessages([{ role: 'assistant', text: t('chat.greeting') }])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t])
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus()
+  }, [open])
 
   const handleSend = async () => {
     if (!input.trim() || loading) return
     const userMsg = input.trim()
     setInput('')
-    setMessages((prev) => [...prev, { role: 'user', text: userMsg }])
+    setMessages((prev) => {
+      const updated = [...prev, { role: 'user' as const, text: userMsg }]
+      return updated.length > MAX_MESSAGES ? updated.slice(-MAX_MESSAGES) : updated
+    })
     setLoading(true)
 
     try {
       const conversation = messages
-        .filter((m) => m.role === 'user')
-        .map((m) => ({ role: 'user' as const, parts: [{ text: m.text }] }))
+        .slice(-20)
+        .map((m) => ({ role: m.role === 'user' ? 'user' as const : 'model' as const, parts: [{ text: m.text }] }))
       conversation.push({ role: 'user', parts: [{ text: userMsg }] })
 
       const res = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDWEy2rEEbxm13fzk8TeGaXpvjL3i2qfCY',
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -73,6 +85,7 @@ export function AiChat() {
     <>
       <button
         onClick={() => setOpen(true)}
+        aria-label="Open chat"
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-lg hover:shadow-purple-500/25 transition-shadow"
       >
         <MessageCircle size={24} />
@@ -92,12 +105,12 @@ export function AiChat() {
                 <Sparkles size={16} className="text-purple-400" />
                 <span className="text-sm font-medium text-white">Nairi</span>
               </div>
-              <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-white transition-colors">
+              <button onClick={() => setOpen(false)} aria-label="Close chat" className="text-gray-500 hover:text-white transition-colors">
                 <X size={18} />
               </button>
             </div>
 
-            <div className="h-80 overflow-y-auto p-4 space-y-3">
+            <div className="h-80 overflow-y-auto p-4 space-y-3" role="log" aria-live="polite">
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div
@@ -123,15 +136,18 @@ export function AiChat() {
 
             <div className="flex items-center gap-2 p-3 border-t border-white/5">
               <input
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder={t('chat.placeholder')}
+                maxLength={MAX_INPUT_LENGTH}
                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-purple-500/30 transition-colors"
               />
               <button
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
+                aria-label="Send message"
                 className="w-9 h-9 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center disabled:opacity-30 hover:bg-purple-600/30 transition-colors"
               >
                 <Send size={16} />

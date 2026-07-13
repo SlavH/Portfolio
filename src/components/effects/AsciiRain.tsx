@@ -56,6 +56,10 @@ export function AsciiRain() {
     window.addEventListener('resize', resize)
 
     function draw() {
+      if (document.hidden) {
+        animId = requestAnimationFrame(draw)
+        return
+      }
       ctx!.fillStyle = 'rgba(10,10,15,0.05)'
       ctx!.fillRect(0, 0, w, h)
 

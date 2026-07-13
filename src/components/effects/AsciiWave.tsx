@@ -27,6 +27,10 @@ export function AsciiWave() {
     window.addEventListener('resize', resize)
 
     function draw() {
+      if (document.hidden) {
+        animId = requestAnimationFrame(draw)
+        return
+      }
       time += 0.02
       ctx!.fillStyle = 'rgba(10,10,15,0.15)'
       ctx!.fillRect(0, 0, w, h)

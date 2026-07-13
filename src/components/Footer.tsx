@@ -10,8 +10,8 @@ export function Footer() {
           &copy; {new Date().getFullYear()} Slav Hayrapetyan. {t('footer.built')}.
         </p>
         <div className="flex items-center gap-4 text-xs text-gray-600">
-          <a href="https://github.com/SlavH" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">GitHub</a>
-          <a href="https://www.linkedin.com/in/slav-hayrapetyan-b867a5243/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">LinkedIn</a>
+          <a href="https://github.com/SlavH" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in new tab)" className="hover:text-gray-400 transition-colors">GitHub</a>
+          <a href="https://www.linkedin.com/in/slav-hayrapetyan-b867a5243/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)" className="hover:text-gray-400 transition-colors">LinkedIn</a>
           <a href="mailto:slavhayrapetyan10@gmail.com" className="hover:text-gray-400 transition-colors">Email</a>
         </div>
       </div>

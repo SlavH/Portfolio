@@ -1,5 +1,6 @@
 const CACHE = 'v1'
-const urls = ['/', '/index.html']
+const BASE = '/Portfolio/'
+const urls = [BASE, BASE + 'index.html']
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(urls)))

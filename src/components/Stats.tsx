@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
@@ -11,11 +11,32 @@ const stats = [
 
 function Counter({ to, suffix }: { to: number; suffix: string }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
+  const inView = useInView(ref, { once: true, margin: '-50px' })
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    if (!inView) return
+    let animId: number
+    const duration = 1500
+    const startTime = performance.now()
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(eased * to))
+      if (progress < 1) {
+        animId = requestAnimationFrame(animate)
+      }
+    }
+
+    animId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animId)
+  }, [inView, to])
 
   return (
     <span ref={ref}>
-      {inView ? to : 0}
+      {inView ? display : 0}
       {suffix}
     </span>
   )

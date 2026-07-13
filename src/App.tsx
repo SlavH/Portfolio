@@ -1,20 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { Navbar } from './components/Navbar'
 import { Hero } from './components/Hero'
 import { About } from './components/About'
 import { Skills } from './components/Skills'
 import { Stats } from './components/Stats'
-import { LandingsCarousel } from './components/LandingsCarousel'
 import { Projects } from './components/Projects'
 import { Experience } from './components/Experience'
 import { Blog } from './components/Blog'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
-import { AiChat } from './components/AiChat'
 import { AsciiManager } from './components/effects/AsciiManager'
 import { NotFound } from './components/NotFound'
 import { useTheme } from './hooks/useTheme'
 import { ReactLenis } from 'lenis/react'
+
+const LandingsCarousel = lazy(() => import('./components/LandingsCarousel').then(m => ({ default: m.LandingsCarousel })))
+const AiChat = lazy(() => import('./components/AiChat').then(m => ({ default: m.AiChat })))
 
 function AppContent() {
   useTheme()
@@ -41,7 +42,7 @@ function AppContent() {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {})
+      navigator.serviceWorker.register('/Portfolio/sw.js').catch(() => {})
     }
   }, [])
 
@@ -62,7 +63,9 @@ function AppContent() {
           <Hero />
           <About />
           <Stats />
-          <LandingsCarousel />
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <LandingsCarousel />
+          </Suspense>
           <Skills />
           <Projects />
           <Experience />
@@ -70,7 +73,9 @@ function AppContent() {
           <Contact />
           <Footer />
         </main>
-        <AiChat />
+        <Suspense fallback={null}>
+          <AiChat />
+        </Suspense>
       </div>
     </ReactLenis>
   )
