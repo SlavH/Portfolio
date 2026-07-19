@@ -9,7 +9,7 @@ const contacts = [
   { icon: MessageCircle, label: 'Telegram', value: '@SlavHayrapetyan', href: 'https://t.me/SlavHayrapetyan' },
   { icon: Mail, label: 'Email', value: 'slavhayrapetyan10@gmail.com', href: 'mailto:slavhayrapetyan10@gmail.com' },
   { icon: Globe, label: 'Habr Career', value: 'Slav Hayrapetyan', href: 'https://career.habr.com/slav_hayrapetyan' },
-  { icon: ExternalLink, label: 'Upwork', value: 'Slav H.', href: 'https://www.upwork.com/freelancers/~012345' },
+  { icon: ExternalLink, label: 'Upwork', value: 'Slav H.', href: 'https://www.upwork.com/freelancers/~01286c5c27aa1b808d' },
 ]
 
 export function Contact() {

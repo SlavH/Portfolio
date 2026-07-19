@@ -60,6 +60,14 @@ export function Hero() {
           >
             {t('hero.cta_contact')}
           </a>
+          <a
+            href="/Portfolio/Slav_Hayrapetyan_Resume_EN.docx"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-3 rounded-full border border-purple-500/30 text-purple-300 hover:bg-purple-500/10 transition-colors"
+          >
+            {t('hero.cta_cv')}
+          </a>
         </motion.div>
       </div>
 

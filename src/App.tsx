@@ -17,6 +17,11 @@ import { ReactLenis } from 'lenis/react'
 const LandingsCarousel = lazy(() => import('./components/LandingsCarousel').then(m => ({ default: m.LandingsCarousel })))
 const AiChat = lazy(() => import('./components/AiChat').then(m => ({ default: m.AiChat })))
 
+function isHomePath(p: string): boolean {
+  const normalized = p.replace(/\/+$/, '')
+  return normalized === '' || normalized === '/Portfolio'
+}
+
 function AppContent() {
   useTheme()
   const [path, setPath] = useState(window.location.pathname)
@@ -24,12 +29,13 @@ function AppContent() {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const a = (e.target as HTMLElement).closest('a')
-      if (a && a.href && a.href.startsWith(window.location.origin + '/') && !a.getAttribute('target')) {
-        e.preventDefault()
-        const p = new URL(a.href).pathname
-        window.history.pushState({}, '', p)
-        setPath(p)
-      }
+      if (!a || !a.href || a.getAttribute('target')) return
+      const url = new URL(a.href)
+      if (url.origin !== window.location.origin) return
+      if (url.pathname === window.location.pathname && url.hash) return
+      e.preventDefault()
+      window.history.pushState({}, '', url.pathname + url.search + url.hash)
+      setPath(url.pathname)
     }
     const handlePop = () => setPath(window.location.pathname)
     document.addEventListener('click', handleClick)
@@ -46,7 +52,7 @@ function AppContent() {
     }
   }, [])
 
-  if (path !== '/') {
+  if (!isHomePath(path)) {
     return (
       <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
         <NotFound />
